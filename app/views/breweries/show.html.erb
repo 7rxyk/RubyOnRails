@@ -1,16 +1,11 @@
 <p id="notice"><%= notice %></p>
 
-<h1>
-  <%= @brewery.name %>
-</h1>
+<h1> <%= @brewery.name %> </h1>
 
-<i>
-  Established in
-  <%= @brewery.year %>
-</i>
+<i> Established in <%= @brewery.year %> </i>
 
 <p>
-  <strong>Number of beers</strong>
+  <strong>Number of beers:</strong>
   <%= @brewery.beers.count %>
 </p>
 
@@ -20,6 +15,11 @@
  <% end %>
 </p>
 
-
+<% if @brewery.ratings.empty? %>
+ No ratings given!
+<% else %>
+ Has <%= pluralize(@brewery.ratings.size, "rating") %>, average <%= @brewery.average_rating %>
+<% end %>
+<br/>
 <%= link_to 'Edit', edit_brewery_path(@brewery) %> |
 <%= link_to 'Back', breweries_path %>
