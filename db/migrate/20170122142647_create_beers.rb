@@ -5,7 +5,7 @@ class CreateBeers < ActiveRecord::Migration
       t.string :style
       t.integer :brewery_id
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end
