@@ -2,32 +2,38 @@
 
 <p>
   <strong><%= @user.username %></strong>
-<br/>
-has made <%= @user.ratings.count %> ratings
-<br/>
-Average rating : <%= @user.average_rating %>
-<br/>
-Member of: <br/>
+  <br/>
+  has made <%= @user.ratings.count %> ratings
+  <br/>
+  Average rating : <%= @user.average_rating %>
+  <br/>
+  Favourite beer : <%= @user.favorite_beer %>
+  <br/>
+  Favourite style : <%= @user.favorite_style %>
+  <br/>
+  Favourite brewery : <%= @user.favourite_brewery %>
+  <br/>
+  Member of: <br/>
 <ul>
-<% @user.beer_clubs.each do |club| %>
-<li> <%= link_to club.name, club %> </li>
-<% end %>
+  <% @user.beer_clubs.each do |club| %>
+      <li> <%= link_to club.name, club %> </li>
+  <% end %>
 </ul>
 </p>
 
 <strong>ratings</strong>
 <ul>
-<% @user.ratings.each do |rating| %>
-<li>
-<%= rating.to_s %>
-<% if @user == current_user %>
-<%= link_to 'delete', rating, method: :delete, data: { confirm: 'Are you sure?' }  %>
-<% end %>
-</li>
-<% end %>
+  <% @user.ratings.each do |rating| %>
+      <li>
+        <%= rating.to_s %>
+        <% if @user == current_user %>
+            <%= link_to 'delete', rating, method: :delete, data: {confirm: 'Are you sure?'} %>
+        <% end %>
+      </li>
+  <% end %>
 </ul>
 
 <% if @user == current_user %>
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' } %> |
+    <%= link_to 'Edit', edit_user_path(@user) %> |
+    <%= link_to 'Destroy', @user, method: :delete, data: {confirm: 'Are you sure?'} %> |
 <% end %>

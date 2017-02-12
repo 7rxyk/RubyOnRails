@@ -1,5 +1,6 @@
 class BeerClubsController < ApplicationController
   before_action :set_beer_club, only: [:show, :edit, :update, :destroy]
+  before_action :ensure_that_signed_in, except: [:index, :show]
 
   # GET /beer_clubs
   # GET /beer_clubs.json
@@ -62,13 +63,13 @@ class BeerClubsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_beer_club
-      @beer_club = BeerClub.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_beer_club
+    @beer_club = BeerClub.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def beer_club_params
-      params.require(:beer_club).permit(:name, :founded, :city)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def beer_club_params
+    params.require(:beer_club).permit(:name, :founded, :city)
+  end
 end
