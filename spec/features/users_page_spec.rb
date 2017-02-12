@@ -67,7 +67,6 @@ describe "User" do
     Rating.create score: 20, beer_id: beer.id, user_id: user.id
     visit user_path(user)
     expect(page).to have_content 'Lager'
-	save_and_open_page
   end
 
   it "allows deleting ratings" do
@@ -80,7 +79,7 @@ describe "User" do
     expect {
       click_on('delete')
     }.to change { Rating.count }.by(-1)
-	save_and_open_page
+	
   end
 
   it "when signed up with good credentials, is added to the system" do
@@ -92,6 +91,5 @@ describe "User" do
     expect {
       click_button('Create User')
     }.to change { User.count }.by(1)
-	save_and_open_page
   end
 end
