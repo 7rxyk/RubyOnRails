@@ -21,7 +21,6 @@ describe "User" do
 
       expect(current_path).to eq(signin_path)
       expect(page).to have_content 'Username and/or password mismatch'
-	  save_and_open_page
     end
   end
 
@@ -41,7 +40,6 @@ describe "User" do
     Rating.create score: 18, beer_id: beertwo.id, user_id: user.id
     visit user_path(user)
     expect(page).to have_content 'MegaBeer 18'
-	save_and_open_page
   end
 
   it "shows favourite brewery" do
@@ -54,7 +52,6 @@ describe "User" do
     Rating.create score: 20, beer_id: beer.id, user_id: user.id
     visit user_path(user)
     expect(page).to have_content 'SuperBrewery'
-	save_and_open_page
   end
 
   it "shows favourite style" do
