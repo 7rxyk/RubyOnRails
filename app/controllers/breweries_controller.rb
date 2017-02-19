@@ -8,10 +8,10 @@ class BreweriesController < ApplicationController
     @breweries = Brewery.all
   end
 
-  # GET /breweries/1
-  # GET /breweries/1.json
-  def show
-  end
+   def nayta
+     @brewery = Brewery.find(params[:panimo_id])
+     render :index
+   end
 
   # GET /breweries/new
   def new

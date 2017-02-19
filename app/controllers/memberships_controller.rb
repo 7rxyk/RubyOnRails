@@ -10,6 +10,7 @@ class MembershipsController < ApplicationController
   # GET /memberships/1
   # GET /memberships/1.json
   def show
+
   end
 
   # GET /memberships/new
@@ -29,10 +30,10 @@ class MembershipsController < ApplicationController
 
     respond_to do |format|
       if Membership.find_by(user_id: @membership.user.id, beer_club_id: @membership.beer_club.id).nil? && @membership.save
-        format.html { redirect_to @membership.beer_club, notice: 'Membership was successfully created.' }
+        format.html { redirect_to @membership.beer_club, notice: 'Welcome to the club!' }
         format.json { render :show, status: :created, location: @membership }
       else
-	@beer_clubs = BeerClub.all
+        @beer_clubs = BeerClub.all
         format.html { render :new }
         format.json { render json: @membership.errors, status: :unprocessable_entity }
       end
@@ -71,6 +72,6 @@ class MembershipsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def membership_params
-      params.require(:membership).permit(:user_id, :beer_club_id)
+      params.require(:membership).permit(:beer_club_id, :user_id)
     end
 end

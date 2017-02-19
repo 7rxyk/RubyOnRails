@@ -6,6 +6,14 @@ Rails.application.routes.draw do
   get 'signup', to: 'users#new'
   get 'signin', to: 'sessions#new'
   delete 'signout', to: 'sessions#destroy'
+  get 'panimo/:panimo_id', to: 'breweries#nayta'
+  
+  resources :places, only:[:index, :show]
+# mikä generoi samat polut kuin seuraavat kaksi
+# get 'places', to:'places#index'
+# get 'places/:id', to:'places#show'
+
+post 'places', to:'places#search'
   resources :ratings, only: [:index, :new, :create, :destroy]
   resources :beers
   resources :breweries

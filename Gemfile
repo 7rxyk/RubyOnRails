@@ -5,8 +5,27 @@ ruby '2.1.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.8'
 # Use sqlite3 as the database for Active Record
+
 group :development, :test do
-  gem 'sqlite3'
+   gem 'sqlite3'
+end
+
+group :test do
+  gem 'webmock'
+	gem 'factory_girl_rails'
+	gem 'capybara'
+  	gem 'launchy'
+  	gem 'simplecov', require: false
+end
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.5'
+end
+
+gem 'byebug', group: [:development, :test]
+
+
+group :development, :test do
   gem "better_errors"
   gem 'pry-rails' 
 end
@@ -16,27 +35,20 @@ group :production do
    gem 'rails_12factor'
 end
 
-group :development, :test do
-  gem 'rspec-rails', '~> 3.5'
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-end
-
-group :test do
-  gem 'factory_girl_rails'
-  gem 'capybara'
-  gem 'launchy'
-  gem 'simplecov', require: false
-end
+# HTTP requests with HTTParty
+gem 'httparty'
 
 gem 'rspec-its'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
+
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby
 

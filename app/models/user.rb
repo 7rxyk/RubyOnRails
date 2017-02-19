@@ -1,15 +1,13 @@
 class User < ActiveRecord::Base
-
   include RatingAverage
 
   has_secure_password
 
   validates :username, uniqueness: true,
-            length: {minimum: 3, maximum: 30}
+                       length: { in: 3..30 }
+  validates :password, length: { minimum: 4 },
+                       format: { with: /(?=.*[a-zA-Z])(?=.*[0-9]).{4,}/ }
 
-  validates :password, length: {minimum: 4}
-
-  validates_format_of :password, :with => /\A(?=.*[A-Z])(?=.*\d).+\z/
 
   has_many :ratings, dependent: :destroy
   has_many :beers, through: :ratings
@@ -18,16 +16,39 @@ class User < ActiveRecord::Base
 
   def favorite_beer
     return nil if ratings.empty?
-    return ratings.sort_by(&:score).last.beer
+    ratings.order(score: :desc).limit(1).first.beer
   end
 
   def favorite_style
     return nil if ratings.empty?
-    return Beer.find_by_sql("SELECT beers.*, SUM(ratings.score) as sum FROM beers JOIN ratings ON beers.id = ratings.beer_id JOIN users ON ratings.user_id = users.id WHERE ratings.user_id = " + id.to_s + " GROUP BY beers.style ORDER BY sum DESC LIMIT 1").first.style
+
+    ratings_of_styles = ratings.group_by { |r| r.beer.style }
+    averages_of_styles = []
+    ratings_of_styles.each do |style, ratings|
+      averages_of_styles << {
+          style: style,
+          rating: ratings.map(&:score).sum / ratings.count.to_f
+      }
+    end
+    averages_of_styles.sort_by{ |b| -b[:rating] }.first[:style]
   end
 
-  def favourite_brewery
-     return nil if ratings.empty?
-     return Beer.find_by_sql("SELECT beers.*, SUM(ratings.score) as sum FROM beers JOIN ratings ON beers.id = ratings.beer_id JOIN users ON ratings.user_id = users.id JOIN breweries ON breweries.id = beers.brewery_id WHERE ratings.user_id = " + id.to_s + " GROUP BY breweries.id ORDER BY sum DESC LIMIT 1").first.brewery.name
+  def favorite_brewery
+    return nil if ratings.empty?
+
+    ratings_of_breweries = ratings.group_by { |r| r.beer.brewery }
+    averages_of_breweries = []
+    ratings_of_breweries.each do |brewery, ratings|
+      averages_of_breweries << {
+          brewery: brewery,
+          rating: ratings.map(&:score).sum / ratings.count.to_f
+      }
+    end
+    averages_of_breweries.sort_by{ |b| -b[:rating] }.first[:brewery]
   end
+
+  def in_club(club)
+    beer_clubs.include? club
+  end
+
 end
