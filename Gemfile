@@ -5,9 +5,9 @@ ruby '2.1.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.8'
 # Use sqlite3 as the database for Active Record
-group :development, :test do
-   gem 'sqlite3'
-end
+#group :development, :test do
+  # gem 'sqlite3'
+#end
 
 group :production do
    gem 'pg'
@@ -50,9 +50,12 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'webmock'
+  gem 'simplecov', require: false
+  gem 'selenium-webdriver'
+  gem 'database_cleaner', '< 1.1.0'
 end
 
-gem 'simplecov', require: false
+
 
 gem 'byebug', group: [:development, :test]
 
@@ -70,6 +73,9 @@ group :development do
 end
 
 gem 'httparty'
+gem 'dalli'
+gem 'memcachier'
+gem "rails-settings-cached", "0.3.1"
 
 gem 'bootstrap-sass'
 group :development do
