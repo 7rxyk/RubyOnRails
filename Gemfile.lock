@@ -30,14 +30,17 @@ GEM
     addressable (2.5.0)
       public_suffix (~> 2.0, >= 2.0.2)
     arel (5.0.1.20140414130214)
-    bcrypt (3.1.11)
-    bcrypt (3.1.11-x86-mingw32)
+    autoprefixer-rails (6.7.5)
+      execjs
     better_errors (2.1.1)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-sass (3.3.5)
+      autoprefixer-rails (>= 5.0.0.1)
+      sass (>= 3.2.19)
     builder (3.2.3)
     byebug (9.0.6)
     capybara (2.12.1)
@@ -120,6 +123,7 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
+    rails_layout (1.0.34)
     rails_serve_static_assets (0.0.5)
     rails_stdout_logging (0.0.5)
     railties (4.1.8)
@@ -134,9 +138,6 @@ GEM
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
-    rspec-its (1.2.0)
-      rspec-core (>= 3.0.0)
-      rspec-expectations (>= 3.0.0)
     rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
@@ -206,8 +207,8 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  bcrypt (~> 3.1.7)
   better_errors
+  bootstrap-sass
   byebug
   capybara
   coffee-rails (~> 4.0.0)
@@ -220,7 +221,7 @@ DEPENDENCIES
   pry-rails
   rails (= 4.1.8)
   rails_12factor
-  rspec-its
+  rails_layout
   rspec-rails (~> 3.5)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)

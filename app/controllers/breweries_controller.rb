@@ -1,13 +1,23 @@
 class BreweriesController < ApplicationController
   before_action :set_brewery, only: [:show, :edit, :update, :destroy]
-  before_action :ensure_that_signed_in, except: [:index, :show]
-  
+  before_action :ensure_that_signed_in, except: [:index, :show, :list]
+  before_action :ensure_that_signed_in_as_admin, only: [:destroy]
+  before_action :skip_if_cached, only:[:index]
   # GET /breweries
   # GET /breweries.json
   def index
     @breweries = Brewery.all
-  end
+    @active_breweries = Brewery.active
+    @retired_breweries = Brewery.retired
 
+    case @order
+      when 'name' then @breweries.sort_by!{|b| b.name}
+      when 'year' then @breweries.sort_by!{|b| b.year}
+    end
+  end
+  def list
+
+  end
   # GET /breweries/1
   # GET /breweries/1.json
   def show
@@ -21,18 +31,27 @@ class BreweriesController < ApplicationController
   # GET /breweries/1/edit
   def edit
   end
+  def toggle_activity
+    expire_brewerylist
+    brewery = Brewery.find(params[:id])
+    brewery.update_attribute :active, (not brewery.active)
 
+    new_status = brewery.active? ? "active" : "retired"
+
+    redirect_to :back, notice:"brewery activity status changed to #{new_status}"
+  end
   # POST /breweries
   # POST /breweries.json
   def create
+    expire_brewerylist
     @brewery = Brewery.new(brewery_params)
 
     respond_to do |format|
       if @brewery.save
         format.html { redirect_to @brewery, notice: 'Brewery was successfully created.' }
-        format.json { render :show, status: :created, location: @brewery }
-      else    
-        format.html { render :new }
+        format.json { render action: 'show', status: :created, location: @brewery }
+      else
+        format.html { render action: 'new' }
         format.json { render json: @brewery.errors, status: :unprocessable_entity }
       end
     end
@@ -41,12 +60,13 @@ class BreweriesController < ApplicationController
   # PATCH/PUT /breweries/1
   # PATCH/PUT /breweries/1.json
   def update
+    expire_brewerylist
     respond_to do |format|
       if @brewery.update(brewery_params)
         format.html { redirect_to @brewery, notice: 'Brewery was successfully updated.' }
-        format.json { render :show, status: :ok, location: @brewery }
+        format.json { head :no_content }
       else
-        format.html { render :edit }
+        format.html { render action: 'edit' }
         format.json { render json: @brewery.errors, status: :unprocessable_entity }
       end
     end
@@ -55,14 +75,17 @@ class BreweriesController < ApplicationController
   # DELETE /breweries/1
   # DELETE /breweries/1.json
   def destroy
+    expire_brewerylist
     @brewery.destroy
     respond_to do |format|
-      format.html { redirect_to breweries_url, notice: 'Brewery was successfully destroyed.' }
+      format.html { redirect_to breweries_url }
       format.json { head :no_content }
     end
   end
 
   private
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_brewery
       @brewery = Brewery.find(params[:id])
@@ -70,7 +93,13 @@ class BreweriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def brewery_params
-      params.require(:brewery).permit(:name, :year)
+      params.require(:brewery).permit(:name, :year,:active)
     end
-
+  def skip_if_cached
+    @order = params[:order] || 'name'
+    return render :index if fragment_exist?( "brewerylist"  )
+  end
+  def expire_brewerylist
+    expire_fragment('brewerylist')
+  end
 end
