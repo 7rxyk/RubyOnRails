@@ -1,44 +1,16 @@
 source 'http://rubygems.org'
 
-ruby '2.1.5'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.8'
 # Use sqlite3 as the database for Active Record
-
 group :development, :test do
    gem 'sqlite3'
-end
-
-group :test do
-  gem 'webmock'
-	gem 'factory_girl_rails'
-	gem 'capybara'
-  	gem 'launchy'
-  	gem 'simplecov', require: false
-end
-
-group :development, :test do
-  gem 'rspec-rails', '~> 3.5'
-end
-
-gem 'byebug', group: [:development, :test]
-
-
-group :development, :test do
-  gem "better_errors"
-  gem 'pry-rails' 
 end
 
 group :production do
    gem 'pg'
    gem 'rails_12factor'
 end
-
-# HTTP requests with HTTParty
-gem 'httparty'
-
-gem 'rspec-its'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -64,17 +36,31 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use unicorn as the app server
-# gem 'unicorn'
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+  gem 'pry-rails'
+end
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+group :development, :test do
+  gem 'rspec-rails', '~> 3.5'
+end
 
-# Use debugger
-# gem 'debugger', group: [:development, :test]
+group :test do
+  gem 'factory_girl_rails'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'webmock'
+end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin]
+gem 'simplecov', require: false
+
+gem 'byebug', group: [:development, :test]
+
+group :development, :test do
+  gem "better_errors"
+  gem 'pry-rails' 
+end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
@@ -84,4 +70,4 @@ group :development do
   gem 'spring'
 end
 
-gem 'bcrypt', '~> 3.1.7'
+gem 'httparty'

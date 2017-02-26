@@ -1,7 +1,8 @@
 class Beer < ActiveRecord::Base
   include RatingAverage
-
+  
   belongs_to :brewery
+  belongs_to :style
   has_many :ratings, dependent: :destroy
   has_many :raters, -> { uniq }, through: :ratings, source: :user
 
@@ -9,13 +10,11 @@ class Beer < ActiveRecord::Base
   validates :style, presence: true
 
   def to_s
-    self.name + " " + self.brewery.name
+    "#{name} #{brewery.name}"
   end
 
   def average
-    if ratings.count == 0
-      return 0
-    end
+    binding.pry
     ratings.map{ |r| r.score }.sum / ratings.count.to_f
   end
 end

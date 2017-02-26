@@ -10,30 +10,31 @@ class MembershipsController < ApplicationController
   # GET /memberships/1
   # GET /memberships/1.json
   def show
-
   end
 
   # GET /memberships/new
   def new
     @membership = Membership.new
-    @beer_clubs = BeerClub.all
+    @beer_clubs = BeerClub.all - current_user.beer_clubs   
   end
 
   # GET /memberships/1/edit
   def edit
+    
   end
 
   # POST /memberships
   # POST /memberships.json
   def create
     @membership = Membership.new(membership_params)
+    @membership.user = current_user
 
     respond_to do |format|
-      if Membership.find_by(user_id: @membership.user.id, beer_club_id: @membership.beer_club.id).nil? && @membership.save
-        format.html { redirect_to @membership.beer_club, notice: 'Welcome to the club!' }
+      if not current_user.beer_clubs.include?  @membership.beer_club and @membership.save
+        format.html { redirect_to @membership.beer_club, notice: "#{@membership.user.username} welcome to club!" }
         format.json { render :show, status: :created, location: @membership }
       else
-        @beer_clubs = BeerClub.all
+        @beer_clubs = BeerClub.all - current_user.beer_clubs 
         format.html { render :new }
         format.json { render json: @membership.errors, status: :unprocessable_entity }
       end
@@ -59,7 +60,7 @@ class MembershipsController < ApplicationController
   def destroy
     @membership.destroy
     respond_to do |format|
-      format.html { redirect_to memberships_url, notice: 'Membership was successfully destroyed.' }
+      format.html { redirect_to @membership.user, notice: "Your membership #{@membership.beer_club.name} ended" }
       format.json { head :no_content }
     end
   end

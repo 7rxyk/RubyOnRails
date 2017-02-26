@@ -1,15 +1,17 @@
-require 'beermapping_api'
-
 class PlacesController < ApplicationController
   def index
   end
 
+  def show
+    @place = BeermappingApi.place_in(session['last_city'], params[:id])
+  end
+  
   def search
-    @places = BeermappingApi.places_in(params[:city])
-    if @places.empty?
-      redirect_to places_path, notice: "No locations in #{params[:city]}"
-    else
-      render :index
-    end
+    city = params[:city]
+    @places = BeermappingApi.places_in(city)
+    @weather = WeatherService.weather_for(city)
+    session['last_city'] = city
+
+    render :index
   end
 end
