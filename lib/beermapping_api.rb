@@ -29,8 +29,3 @@ class BeermappingApi
     ENV['APIKEY']
   end
 end
-
-#  def self.key
-   # "9e3fb2970b7af28244542e3626a5f19c"
-#  end
-# end

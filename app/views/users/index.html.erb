@@ -1,18 +1,19 @@
 <h1>Users</h1>
 
-<table class="table table-hover">
-  <thead>
-  <th> </th>
-  <th> rated beers </th>
-  <th> total ratings </th>
-  </thead>
+<table>
   <tbody>
-  <% @users.each do |user| %>
+    <% @users.each do |user| %>
       <tr>
-        <td><%= link_to user.username, user %></td>
-        <td><%= user.beers.size %></td>
-        <td><%= user.ratings.size %></td>
+        <td>
+          <%= link_to user.username, user %>
+        </td>
+        <td>
+          <% if user.blocked? %>
+            <span class="label label-info">acoount frozen</span>
+          <% end %>          
+        </td>
       </tr>
-  <% end %>
+    <% end %>
   </tbody>
 </table>
+
