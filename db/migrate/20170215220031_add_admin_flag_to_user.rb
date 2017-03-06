@@ -1,4 +1,4 @@
-class AddAdminToUser < ActiveRecord::Migration
+class AddAdminFlagToUser < ActiveRecord::Migration
   def change
     add_column :users, :admin, :boolean
   end
