@@ -1,0 +1,2 @@
+module MembershipConfirmationsHelper
+end

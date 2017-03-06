@@ -1,0 +1,15 @@
+defaults: &defaults
+  email: dev@example.com
+  secret: foo123
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+  email: test@example.com
+
+production:
+  <<: *defaults
+  email: info@example.com
+  secret: 321oof

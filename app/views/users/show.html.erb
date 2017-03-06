@@ -1,46 +1,54 @@
-<h2> <%= @user.username %> </h2>
+<p id="notice"><%= notice %></p>
 
-<p>Has made <%= @user.ratings.count %> ratings</p>
+<h2>
+  <%= @user.username %>
+</h2>
+
+<p>
+  Has made <%= pluralize(@user.ratings.count, 'rating') %>
+</p>
 
 <% if @user.beer_clubs.any? %>
-
-  <p>member of
-  <% @user.beer_clubs.each do |club| %>
-    <%= link_to club.name, club%>
-  <% end %>
+  <p>
+    Member of
+    <% @user.beer_clubs.each do |club| %>
+      <%= link_to club.name, club %>
+    <% end %>
   </p>
+  <p>
+    Pending applications
+    <ul>
+    <% @user.beer_clubs.each do |club| %>
+      <% if club.membership_confirmations.any? %>
+        <% club.membership_confirmations.each do |membership_confirmation| %>
+          <li><%= membership_confirmation.user %> - <%= membership_confirmation.beer_club %>
+            <%= link_to 'Confirm',confirm_url(id:membership_confirmation.id), method: :post %></li>
+
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
 <% else %>
-  <p>no beerclub memberships</p>
+  <p>No club memberships</p>
 <% end %>
 
-<% if @user.ratings.any? %>
-  <p> Favorite beer: <%= @user.favorite_beer.name %> </p>
-  <p> Favorite brewery: <%= @user.favorite_brewery.name %> </p>
-  <p> Favorite style: <%= @user.favorite_style %> </p>
-
-  <p> average rating <%= @user.average_rating %></p>
-
-  <h3>ratings</h3>
-
-  <ul>
-  <% @user.ratings.each do |r| %>
-    <li>
-      <%= r %>
+<ul>
+  <% @user.ratings.each do |rating| %>
+    <li class="rating">
+      <%= rating %>
       <% if @user == current_user %>
-        <%= link_to 'delete', r, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'delete', rating, method: :delete, data: { confirm: 'Are you sure?' } %>
       <% end %>
     </li>
   <% end %>
-  </ul>
+</ul>
 
+<% if @user == current_user %>
+  <%= link_to 'Delete account', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
+  <%= link_to 'Edit', edit_user_path(@user) %>
 <% end %>
 
-<% if @user==current_user %>
-  <%= link_to 'change password', edit_user_path(@user) %> <br>
-  <%= link_to 'destroy', @user, method: :delete, data: { confirm: 'Are you sure?' }  %> 
-<% end %>
 
-<% if admin_user %>
-  <%= link_to "froze", toggle_frozen_user_path(@user.id), method: :post, class: "btn btn-primary" %>
+<% if current_user.admin? %>
+  <%= link_to 'Freeze account', freeze_url(id:@user.id), method: :post %>
 <% end %>
-

@@ -1,1 +1,1 @@
-json.partial! "beers/beer", beer: @beer
+json.extract! @beer, :id, :name, :style, :brewery_id, :created_at, :updated_at

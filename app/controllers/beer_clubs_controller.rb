@@ -1,8 +1,7 @@
 class BeerClubsController < ApplicationController
   before_action :set_beer_club, only: [:show, :edit, :update, :destroy]
   before_action :ensure_that_signed_in, except: [:index, :show]
-  before_action :ensure_that_admin_signed_in, only: :destroy
-  
+
   # GET /beer_clubs
   # GET /beer_clubs.json
   def index
@@ -12,11 +11,10 @@ class BeerClubsController < ApplicationController
   # GET /beer_clubs/1
   # GET /beer_clubs/1.json
   def show
-    if current_user.is_member_of? @beer_club
-      @membership = current_user.memberships.find{ |m| m.beer_club == @beer_club }
+    if current_user and current_user.in? @beer_club.members
+      @membership = @beer_club.memberships.find{ |m| m.user = current_user}
     else
-      @membership = Membership.new
-      @membership.beer_club = @beer_club      
+      @membership_confirmation = MembershipConfirmation.new
     end
   end
 
@@ -36,6 +34,7 @@ class BeerClubsController < ApplicationController
 
     respond_to do |format|
       if @beer_club.save
+        @beer_club.members << current_user
         format.html { redirect_to @beer_club, notice: 'Beer club was successfully created.' }
         format.json { render :show, status: :created, location: @beer_club }
       else

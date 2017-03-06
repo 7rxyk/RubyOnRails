@@ -15,31 +15,28 @@ class MembershipsController < ApplicationController
   # GET /memberships/new
   def new
     @membership = Membership.new
-    @beer_clubs = BeerClub.all - current_user.beer_clubs   
+	@beerclubs = BeerClub.all
   end
 
   # GET /memberships/1/edit
   def edit
-    
   end
 
   # POST /memberships
   # POST /memberships.json
   def create
-    @membership = Membership.new(membership_params)
-    @membership.user = current_user
-
-    respond_to do |format|
-      if not current_user.beer_clubs.include?  @membership.beer_club and @membership.save
-        format.html { redirect_to @membership.beer_club, notice: "#{@membership.user.username} welcome to club!" }
-        format.json { render :show, status: :created, location: @membership }
+     byebug
+      @membership = Membership.new(membership_params)
+      club = BeerClub.find membership_params[:beer_club_id]
+      if not current_user.in? club.members and @membership.save
+        current_user.memberships << @membership
+        @membership.save
+        redirect_to beer_club_path(club), notice: "Welcome to #{@membership.beer_club.name}"
       else
-        @beer_clubs = BeerClub.all - current_user.beer_clubs 
-        format.html { render :new }
-        format.json { render json: @membership.errors, status: :unprocessable_entity }
+        @clubs = BeerClub.all
+        render :new
       end
     end
-  end
 
   # PATCH/PUT /memberships/1
   # PATCH/PUT /memberships/1.json
@@ -60,7 +57,7 @@ class MembershipsController < ApplicationController
   def destroy
     @membership.destroy
     respond_to do |format|
-      format.html { redirect_to @membership.user, notice: "Your membership #{@membership.beer_club.name} ended" }
+      format.html { redirect_to memberships_url, notice: 'Membership was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -73,6 +70,6 @@ class MembershipsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def membership_params
-      params.require(:membership).permit(:beer_club_id, :user_id)
+      params.require(:membership).permit(:user_id, :beer_club_id)
     end
 end
